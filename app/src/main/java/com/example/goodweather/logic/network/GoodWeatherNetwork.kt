@@ -3,6 +3,7 @@ package com.example.goodweather.logic.network
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import retrofit2.await
 import java.lang.RuntimeException
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -14,6 +15,10 @@ object GoodWeatherNetwork {
     private val placeService = ServiceCreator.create(PlaceService::class.java)
 
     suspend fun searchPlaces(query :String )= placeService.searchPlaces(query).await()
+
+    private val weatherService = ServiceCreator.create(WeatherService::class.java)
+
+
 
     private suspend fun <T> Call<T>.await():T{
         return suspendCoroutine { continutaion ->
@@ -32,4 +37,9 @@ object GoodWeatherNetwork {
             })
         }
     }
+
+    suspend fun getDailyWeather(lng:String ,lat:String) = weatherService.getDailyWeather(lng,lat).await()
+
+
+    suspend fun getRealtimeWeather(lng: String,lat: String)= weatherService.getRealtimeWeather(lng,lat).await()
 }
